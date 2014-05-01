@@ -23,13 +23,18 @@ class PDFOutputterServerProvider extends ServiceProvider
 		});
 
 		$this->app->singleton('pdf-output.manager', function($app) {
-			$temp_directory = $this->app['config']->get('pdf-output::temp_directory');
+			$tempDir = $this->app['config']->get('pdf-output::temp_directory')
+				?: storage_path('pdf-output');
+			$file = $app['files'];
+			if (!$file->exists($tempDir)) {
+				$app['files']->makeDirectory($tempDir, 0777, true);
+			}
 
-			return new HTMLToPDFManager($temp_directory, $app['pdf-output.outputter'], $app['files']);
+			return new HTMLToPDFManager($tempDir, $app['pdf-output.outputter'], $file);
 		});
 
 		$this->app->singleton('pdf-output.response-outputter', function($app) {
-			return new LaravelPDFOutputter($app['pdf-output.manager'], $app['view'], new Response);
+			return new LaravelPDFOutputter($app['pdf-output.manager'], $app['files'], $app['view'], $app->make('Illuminate\Support\Facades\Response'));
 		});
 	}
 
