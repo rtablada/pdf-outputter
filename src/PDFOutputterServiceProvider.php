@@ -8,7 +8,7 @@ class PDFOutputterServerProvider extends ServiceProvider
 
 	public function boot()
 	{
-		$this->package('rtablada/pdf-output');
+		$this->app['config']->package('rtablada/pdf-output', __DIR__.'/config', 'pdf-output');
 	}
 
 	/**
@@ -18,6 +18,8 @@ class PDFOutputterServerProvider extends ServiceProvider
 	 */
 	public function register()
 	{
+		$this->package('rtablada/pdf-output');
+
 		$this->app->singleton('pdf-output.outputter', function($app) {
 			return new PdfOutputter;
 		});
@@ -25,6 +27,7 @@ class PDFOutputterServerProvider extends ServiceProvider
 		$this->app->singleton('pdf-output.manager', function($app) {
 			$tempDir = $this->app['config']->get('pdf-output::temp_directory')
 				?: storage_path('pdf-output');
+
 			$file = $app['files'];
 			if (!$file->exists($tempDir)) {
 				$app['files']->makeDirectory($tempDir, 0777, true);
