@@ -29,7 +29,6 @@ class PDFOutputterServerProvider extends ServiceProvider
 		});
 
 		$this->app->singleton('pdf-output.response-outputter', function($app) {
-			HTMLToPDFManager $manager, Filesystem $file, View $view, Response $response
 			return new LaravelPDFOutputter($app['pdf-output.manager'], $app['view'], new Response);
 		});
 	}
