@@ -3,7 +3,7 @@
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Http\Response;
 
-class PDFOutputterServerProvider extends ServiceProvider
+class PDFOutputterServiceProvider extends ServiceProvider
 {
 
 	public function boot()
